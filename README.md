@@ -292,7 +292,7 @@ However, you can use the ? character to change it to lazy matching. "titanic" ma
 Note
 Parsing HTML with regular expressions should be avoided, but pattern matching an HTML string with regular expressions is completely fine.
 
-Fix the regex  /<.*>/  to return the HTML tag <h1> and not the text "<h1>Winter is coming</h1>". Remember the wildcard . in a regular expression matches any character.
+Fix the regex  /<.*>/  to return the HTML tag <h 1> and not the text "<h 1>Winter is coming</h 1>". Remember the wildcard . in a regular expression matches any character.
 ```
  let text = "<h1>Winter is coming</h1>";
 let myRegex = /<.*?>/; // it's the answer!
@@ -307,8 +307,28 @@ let result = text.match(myRegex);
 
 
 ```diff
- @@   @@
+ @@  Regular Expressions: Find One or More Criminals in a Hunt @@
 ```
+Time to pause and test your new regex writing skills. A group of criminals escaped from jail and ran away, but you don't know how many. However, you do know that they stay close together when they are around other people. You are responsible for finding all of the criminals at once.
+
+Here's an example to review how to do this:
+
+The regex /z+/ matches the letter z when it appears one or more times in a row. It would find matches in all of the following strings:
+```
+"z"
+"zzzzzz"
+"ABCzzzz"
+"zzzzABC"
+"abczzzzzzzzzzzzzzzzzzzzzabc"
+```
+But it does not find matches in the following strings since there are no letter z characters:
+```
+""
+"ABC"
+"abcabc"
+```
+Write a greedy regex that finds one or more criminals within a group of other people. A criminal is represented by the capital letter C.
+
 
 
 
