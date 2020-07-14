@@ -558,38 +558,251 @@ let result = ohRegex.test(ohStr);
 
 
 ```diff
- @@   @@
+ @@  Regular Expressions: Specify Only the Lower Number of MatchesPassed @@
 ```
+You can specify the lower and upper number of patterns with quantity specifiers using curly brackets. Sometimes you only want to specify the lower number of patterns with no upper limit.
+
+To only specify the lower number of patterns, keep the first number followed by a comma.
+
+For example, to match only the string "hah" with the letter a appearing at least 3 times, your regex would be /ha{3,}h/.
+
+let A4 = "haaaah";
+let A2 = "haah";
+let A100 = "h" + "a".repeat(100) + "h";
+let multipleA = /ha{3,}h/;
+multipleA.test(A4); // Returns true
+multipleA.test(A2); // Returns false
+multipleA.test(A100); // Returns true
+Change the regex haRegex to match the word "Hazzah" only when it has four or more letter z's.
+
+let haStr = "Hazzzzah";
+let haRegex = /Haz{3,}zah/; // Change this line
+let result = haRegex.test(haStr);
+
+
+```diff
+ @@ Regular Expressions: Specify Exact Number of Matches  @@
+```
+You can specify the lower and upper number of patterns with quantity specifiers using curly brackets. Sometimes you only want a specific number of matches.
+
+To specify a certain number of patterns, just have that one number between the curly brackets.
+
+For example, to match only the word "hah" with the letter a 3 times, your regex would be /ha{3}h/.
+
+let A4 = "haaaah";
+let A3 = "haaah";
+let A100 = "h" + "a".repeat(100) + "h";
+let multipleHA = /ha{3}h/;
+multipleHA.test(A4); // Returns false
+multipleHA.test(A3); // Returns true
+multipleHA.test(A100); // Returns false
+Change the regex timRegex to match the word "Timber" only when it has four letter m's.
+
+let timStr = "Timmmmber";
+let timRegex = /Tim{4}ber/; // Change this line
+let result = timRegex.test(timStr);
+
+
+```diff
+ @@  Regular Expressions: Check for All or None @@
+```
+Sometimes the patterns you want to search for may have parts of it that may or may not exist. However, it may be important to check for them nonetheless.
+
+You can specify the possible existence of an element with a question mark, ?. This checks for zero or one of the preceding element. You can think of this symbol as saying the previous element is optional.
+
+For example, there are slight differences in American and British English and you can use the question mark to match both spellings.
+
+let american = "color";
+let british = "colour";
+let rainbowRegex= /colou?r/;
+rainbowRegex.test(american); // Returns true
+rainbowRegex.test(british); // Returns true
+Change the regex favRegex to match both the American English (favorite) and the British English (favourite) version of the word.
+
+let favWord = "favorite";
+let favRegex = /favou?rite/; // Change this line
+let result = favRegex.test(favWord);
 
 
 
 
 ```diff
- @@   @@
+ @@  Regular Expressions: Positive and Negative Lookahead @@
 ```
+Lookaheads are patterns that tell JavaScript to look-ahead in your string to check for patterns further along. This can be useful when you want to search for multiple patterns over the same string.
+
+There are two kinds of lookaheads: positive lookahead and negative lookahead.
+
+A positive lookahead will look to make sure the element in the search pattern is there, but won't actually match it. A positive lookahead is used as (?=...) where the ... is the required part that is not matched.
+
+On the other hand, a negative lookahead will look to make sure the element in the search pattern is not there. A negative lookahead is used as (?!...) where the ... is the pattern that you do not want to be there. The rest of the pattern is returned if the negative lookahead part is not present.
+
+Lookaheads are a bit confusing but some examples will help.
+
+let quit = "qu";
+let noquit = "qt";
+let quRegex= /q(?=u)/;
+let qRegex = /q(?!u)/;
+quit.match(quRegex); // Returns ["q"]
+noquit.match(qRegex); // Returns ["q"]
+A more practical use of lookaheads is to check two or more patterns in one string. Here is a (naively) simple password checker that looks for between 3 and 6 characters and at least one number:
+
+let password = "abc123";
+let checkPass = /(?=\w{3,6})(?=\D*\d)/;
+checkPass.test(password); // Returns true
+Use lookaheads in the pwRegex to match passwords that are greater than 5 characters long, do not begin with numbers, and have two consecutive digits.
+
+Hints
+Hint 1
+Remeber to use 2 lookaheads to check the patterns in the string. The first lookahead is very similar to that given in the example - ‘(?=\w{3,6})’ - only the lower-number 3 is too low for our test cases, and an upper-number is completely unneccesarry. This first lookahead is only used to find a string consisting of a certain amount of characters. A second lookahead must be used to check for consecutive numerical values at the end of the string.
+
+Hint 2
+The second lookahead is also similar to that given in the example - (?=\D*\d) - however, this expression too must be modified to pass all test cases. Remember to specify the exact amount of numbers you want to appear at the end of the string.
+
+Solutions
+Solution 1 (Click to Show/Hide)
+let sampleWord = "astronaut";
+var pwRegex =  /^\D(?=\w{5})(?=\w*\d{2})/;
+let result = pwRegex.test(sampleWord);
+
+```diff
+ @@  Regular Expressions: Check For Mixed Grouping of Characters @@
+```
+Sometimes we want to check for groups of characters using a Regular Expression and to achieve that we use parentheses ().
+
+If you want to find either Penguin or Pumpkin in a string, you can use the following Regular Expression: /P(engu|umpk)in/g
+
+Then check whether the desired string groups are in the test string by using the test() method.
+
+let testStr = "Pumpkin";
+let testRegex = /P(engu|umpk)in/;
+testRegex.test(testStr);
+// Returns true
+Fix the regex so that it checks for the names of Franklin Roosevelt or Eleanor Roosevelt in a case sensitive manner and it should make concessions for middle names.
+
+Then fix the code so that the regex that you have created is checked against myString and either true or false is returned depending on whether the regex matches.
+let myString = "Eleanor Roosevelt";
+let myRegex = /(Franklin|Eleanor).* Roosevelt/; // Change this line
+let result = myRegex.test(myString); // Change this line
+// After passing the challenge experiment with myString and see how the grouping works
 
 
 
 
 ```diff
- @@   @@
+ @@ Regular Expressions: Reuse Patterns Using Capture Groups  @@
 ```
+Some patterns you search for will occur multiple times in a string. It is wasteful to manually repeat that regex. There is a better way to specify when you have multiple repeat substrings in your string.
 
+You can search for repeat substrings using capture groups. Parentheses, ( and ), are used to find repeat substrings. You put the regex of the pattern that will repeat in between the parentheses.
 
+To specify where that repeat string will appear, you use a backslash (\) and then a number. This number starts at 1 and increases with each additional capture group you use. An example would be \1 to match the first group.
 
+The example below matches any word that occurs twice separated by a space:
 
+let repeatStr = "regex regex";
+let repeatRegex = /(\w+)\s\1/;
+repeatRegex.test(repeatStr); // Returns true
+repeatStr.match(repeatRegex); // Returns ["regex regex", "regex"]
+Using the .match() method on a string will return an array with the string it matches, along with its capture group.
+
+Use capture groups in reRegex to match numbers that are repeated only three times in a string, each separated by a space.
+Hints
+Hint 1
+Given code below:
+
+let testString = "test test test";
+let reRegex = /(test)\s\1/;
+let result = reRegex.test(testString);
+result will match only test test because \1 in this example stands for the same text as most recently matched by the 1st capturing group (test).
+
+If we were to literally translate the regex, it would look something like this:
+
+let re = /(test)\s\1/;
+let literalRe = /test\stest/;
+Both re and literalRe would match the same thing.
+
+Hint 2
+Given the code below:
+
+let testString = "test test test";
+let reRegex = /(test)(\s)\1\2\1/;
+let result = reRegex.test(testString);
+result will match whole test test test because:
+\1 repeats (test)
+\2 repeats (\s)
+
+Hint 3
+The code below:
+
+let testString = "test test test test test test";
+let reRegex = /(test)(\s)\1\2\1/g;
+let result = reRegex.test(testString);
+because we used \g, our Regex doesn’t return after first full match (test test test) and matched all repetitions.
+
+let repeatNum = "42 42 42";
+let reRegex = /^(\d+)\s\1\s\1$/;
+let result = reRegex.test(repeatNum);
+
+```diff
+ @@  Regular Expressions: Use Capture Groups to Search and Replace @@
+```
+Searching is useful. However, you can make searching even more powerful when it also changes (or replaces) the text you match.
+
+You can search and replace text in a string using .replace() on a string. The inputs for .replace() is first the regex pattern you want to search for. The second parameter is the string to replace the match or a function to do something.
+
+let wrongText = "The sky is silver.";
+let silverRegex = /silver/;
+wrongText.replace(silverRegex, "blue");
+// Returns "The sky is blue."
+You can also access capture groups in the replacement string with dollar signs ($).
+
+"Code Camp".replace(/(\w+)\s(\w+)/, '$2 $1');
+// Returns "Camp Code"
+Write a regex fixRegex using three capture groups that will search for each word in the string "one two three". Then update the replaceText variable to replace "one two three" with the string "three two one" and assign the result to the result variable. Make sure you are utilizing capture groups in the replacement string using the dollar sign ($) syntax.
+
+Problem Explanation
+Using .replace() with the first parameter set to find the part of the original string to replace, and the second parameter should be the replacement.
+
+Hints
+Hint 1
+You will need three capture groups to accomplish this task.
+
+Hint 2
+Each capture group will need to be separated by a space character.
+
+Hint 3
+The replacement string will use the $ syntax 3 times.
+let str = "one two three";
+let fixRegex = /(\w+)\s(\w+)\s(\w+)/; // Change this line
+let replaceText = "$3 $2 $1"; // Change this line
+let result = str.replace(fixRegex, replaceText);
+
+```diff
+ @@  Regular Expressions: Remove Whitespace from Start and End @@
+```
+Sometimes whitespace characters around strings are not wanted but are there. Typical processing of strings is to remove the whitespace at the start and end of it.
+
+Write a regex and use the appropriate string methods to remove whitespace at the beginning and end of strings.
+
+Note: The String.prototype.trim() method would work here, but you'll need to complete this challenge using regular expressions.
+
+Problem Explanation
+To solve this challenge you simply have to create a regex string that matches any spaces at the beginning or at the end of the string.
+
+Hints
+Hint 1
+Think of how you can select substrings at the beginning or end of a string.
+
+Hint 2
+Think of how you can select whitespace
+
+let hello = "   Hello, World!  ";
+let wsRegex = /^\s+|\s+$/g; // Change this line
+let result = hello.replace(wsRegex, ""); // Change this line
 ```diff
  @@   @@
 ```
-
-
-
-
-```diff
- @@   @@
-```
-
-
 
 
 ```diff
